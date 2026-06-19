@@ -10,17 +10,17 @@ The project is organized into the following directories:
 - `tennis_atp/`: Contains the raw ATP match data in CSV format, with one file per year.
 - `processed_data/`: The output directory for the processed features and labels.
 - `models/`: Stores the trained machine learning models.
-- `notebooks/`: Jupyter notebooks for data exploration and preparation.
-- `documents/`: For any supplementary documents.
-- `tennis_prediction_engine/`: Likely contains the core prediction engine logic (though not explored in this README).
+- `notebooks/`: Jupyter notebooks for exploratory data analysis.
+- `documents/`: Supplementary documents - initial proposal and a documentation of the process.
+- `tennis_prediction_engine/`: Contains the core RandomForest prediction engine, along with the command-line model training script.
 
 ## Data processing pipeline
 
 The data processing pipeline is orchestrated by `data_processing/main.py` and is defined in `data_processing/tennis_pipeline.py`. It consists of the following steps:
 
-1.  **Data Loading**: The pipeline loads raw ATP match data from the `tennis_atp/` directory for the years specified in `data_processing/config.py`.
+1.  **Data loading**: The pipeline loads raw ATP match data from the `tennis_atp/` directory for the years specified in `data_processing/config.py`.
 
-2.  **Feature Engineering**: New features are created from the raw data in `data_processing/feature_engineer.py`. This includes:
+2.  **Feature engineering**: New features are created from the raw data in `data_processing/feature_engineer.py`, including
     *   Calculating Elo ratings for each player.
     *   Creating rolling statistics for various performance metrics (e.g., serve win ratio, breakpoint conversion).
     *   Calculating surface-specific win ratios.
@@ -50,5 +50,23 @@ The data processing pipeline can be configured by editing `data_processing/confi
 -   Mappings for categorical feature encoding.
 
 ## Model training and prediction
+Trained models are stored in the `models/` directory. The model training script is located in `tennis_prediction_engine/model.py`. You can train a new model by running:
+```bash
+python3 tennis_prediction_engine/model.py --mode train --features processed_data/tennis_model_features.csv --labels processed_data/tennis_model_labels.csv
+```
 
-The processed data can then be used to train a machine learning model to predict match outcomes. The training and prediction logic is expected to be in the `tennis_prediction_engine/` directory, which is not detailed in this README. The trained models are saved in the `models/` directory.
+
+The following options are availble
+```
+options:
+  -h, --help            show this help message and exit
+  --mode {train,evaluate,predict}
+                        Operation mode
+  --features FEATURES   Path to features CSV file
+  --labels LABELS       Path to labels CSV
+  --model MODEL         Path to saved model if evaluating/predicting
+  --test-size TEST_SIZE
+                        How much of the data to use as the test set
+  --random-state RANDOM_STATE
+                        Pseudorandom seed
+```
